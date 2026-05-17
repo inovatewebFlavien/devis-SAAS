@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: devis_db
+      POSTGRES_USER: devis_user
+      POSTGRES_PASSWORD: devis_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build: ./backend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    environment:
+      NODE_ENV: development
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: devis_db
+      DATABASE_USER: devis_user
+      DATABASE_PASSWORD: devis_pass
+      JWT_SECRET: change_me_in_production
+    volumes:
+      - ./backend/src:/app/src # hot reload : les modifs src/ sont reflétées
+
+  frontend:
+    build: ./frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+    environment:
+      VITE_API_URL: http://localhost:3000
+    volumes:
+      - ./frontend/src:/app/src # hot reload
+
+volumes:
+  pgdata:
