@@ -1,18 +1,27 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
 
-@Entity()
+@Entity('users')
 export class UserEntity {
-  @PrimaryGeneratedColumn()
-  id: number | undefined;
+  @PrimaryGeneratedColumn('uuid')
+  id: string | undefined;
 
-  @Column()
-  firstName: string | undefined;
-
-  @Column()
-  lastName: string | undefined;
-
-  @Column()
+  @Column({type: 'varchar', length: 255, unique: true})
   email: string | undefined;
+
+  @Column({ type: 'varchar', length: 255})
+  password_hash: string|undefined
+
+  @Column({type: 'varchar', length: 255})
+  company_name: string|undefined
+
+  @Column({type: 'varchar', length:255, nullable: true})
+  siret: string|undefined;
+
+  @Column({type: 'text', nullable: true})
+  address: string|undefined
+
+  @CreateDateColumn()
+  created_at: Date|undefined
 }

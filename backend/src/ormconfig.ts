@@ -17,6 +17,7 @@ const options: DataSourceOptions = {
 export const typeOrmModuleOptions: TypeOrmModuleOptions = {
   ...options,
   synchronize: true,
+  logging: true,
 };
 
 export const connectionSource = new DataSource(options);
